@@ -44,13 +44,14 @@
 
     </div> <!-- /container -->
     <script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="js/config.js"></script>
     <script type="text/javascript">
     //172.18.3.223
     function login() {
     	var res=$.ajax({
     	        type :"get",
     	        async:false,
-    	        url : "http://172.18.1.252/1606StevePHP/web/login.php",
+    	        url : config.url.login,
     	        dataType : "jsonp",
     	        jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
     	        data: {"uid":$('#inputId').val(),"pwd":$('#inputPassword').val()},

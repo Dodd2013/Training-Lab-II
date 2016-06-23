@@ -40,7 +40,7 @@
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Settings</a></li>
             <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li>
+            <li><a href="javascript:void(0)" onclick="logout();">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -232,49 +232,7 @@
     <script src="js/jquery-3.0.0.min.js"></script>
     <script src="js/angular.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-        function progressCtrl () {
-          var precent=0;
-          function showProgress(){
-            $("#progressbar").css({"width":precent+"%"});
-          }
-          return {
-            setProgress:function (data) {
-              precent=data;
-              showProgress();
-            },
-            getProgress:function () {
-              return precent;
-            },
-            addProgress:function (data){
-              precent+=data;
-              showProgress();
-            }
-          };
-        }
-        var progress=progressCtrl();
-        var app = angular.module('myApp', []);
-        app.controller('navCtrl', function($scope) {
-              var res=$.ajax({
-                      type :"get",
-                      async:false,
-                      url : "http://172.18.1.252/1606StevePHP/web/loginstate.php",
-                      dataType : "jsonp",
-                      jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
-                      data: {},
-                      success : function(data){
-                        $scope.$apply(function() {
-                          $scope.user = data;
-                          progress.addProgress(100);
-
-                        });
-                      },
-                      error:function(){
-                          alert("Can't connet to server!");
-                      }
-                  });
-
-        });  
-    </script>
+    <script type="text/javascript" src="js/config.js"></script>
+    <script type="text/javascript" src="js/home.js"></script>
   </body>
 </html>
