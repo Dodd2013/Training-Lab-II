@@ -16,11 +16,13 @@
 
     <!-- Custom styles for this template -->
     <link href="css/home.css" rel="stylesheet">
-    <script src="js/ng.js"></script>
   </head>
 
   <body ng-app="myApp">
-
+    <div class="progress progressbar">
+      <div id="progressbar" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 00%">
+      </div>
+    </div>
     <nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="navCtrl">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -34,7 +36,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="">{{ uname }}</a></li>
+            <li><a href="">{{ user.uname }}</a></li>
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Settings</a></li>
             <li><a href="#">Profile</a></li>
@@ -228,12 +230,51 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-3.0.0.min.js"></script>
+    <script src="js/angular.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+        function progressCtrl () {
+          var precent=0;
+          function showProgress(){
+            $("#progressbar").css({"width":precent+"%"});
+          }
+          return {
+            setProgress:function (data) {
+              precent=data;
+              showProgress();
+            },
+            getProgress:function () {
+              return precent;
+            },
+            addProgress:function (data){
+              precent+=data;
+              showProgress();
+            }
+          };
+        }
+        var progress=progressCtrl();
         var app = angular.module('myApp', []);
         app.controller('navCtrl', function($scope) {
-            $scope.uname = "fdsafdas";
-        });
+              var res=$.ajax({
+                      type :"get",
+                      async:false,
+                      url : "http://172.18.1.252/1606StevePHP/web/loginstate.php",
+                      dataType : "jsonp",
+                      jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+                      data: {},
+                      success : function(data){
+                        $scope.$apply(function() {
+                          $scope.user = data;
+                          progress.addProgress(100);
+
+                        });
+                      },
+                      error:function(){
+                          alert("Can't connet to server!");
+                      }
+                  });
+
+        });  
     </script>
   </body>
 </html>
