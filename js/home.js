@@ -25,11 +25,28 @@ function hideProgress(){
   };
 }
 var progress=progressCtrl();
-var app = angular.module('myApp', []);
-app.controller('navCtrl', function($scope) {
+var app = angular.module('myApp', ['ngRoute']).config([
+    '$routeProvider',
+    function ($routeProvider) {
+        $routeProvider
+            .when('/home', {
+                templateUrl: 'temp/home.html',
+                controller: 'HomeController'
+            })
+            .when('/newCourse', {
+                templateUrl: 'temp/newCourse.html',
+                controller: 'newCourseController'
+            })
+            .when('/about', {
+                templateUrl: 'temp/about.html',
+                controller: 'AboutController'
+            })
+            .otherwise('/home')
+    }
+]).controller('navCtrl', function($scope) {
       var res=$.ajax({
               type :"get",
-              async:false,
+              async:true,
               url : config.url.loginstate,
               dataType : "jsonp",
               jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
@@ -52,12 +69,39 @@ app.controller('navCtrl', function($scope) {
               }
           });
 
+}).controller("HomeController",function($scope) {
+
+}).controller("newCourseController",function($scope) {
+  $scope.course={};
+  $scope.addCourse=function() {
+    $.ajax({
+          type :"get",
+          async:true,
+          url : config.url.course,
+          dataType : "jsonp",
+          jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+          data: {opt:'add',course:$scope.course.name},
+          success : function(data){
+            if(data.msg==='error'){
+              alert("add Course fail!");
+            }
+            if(data.msg==='ok'){
+              alert("add Course success!");
+            }
+          },
+          error:function(){
+              alert("Can't connet to server!");
+          }
+      });
+  };
+}).controller("AboutController",function($scope) {
+
 });
 
 function logout() {
   var res=$.ajax({
           type :"get",
-          async:false,
+          async:true,
           url : config.url.logout,
           dataType : "jsonp",
           jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名

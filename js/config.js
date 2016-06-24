@@ -1,7 +1,9 @@
+var urlbase="http://127.0.0.1:8001/1606StevePHP/web/"
 var config={
 	url:{
-		login:"http://172.18.1.252/1606StevePHP/web/login.php",
-		loginstate:"http://172.18.1.252/1606StevePHP/web/loginstate.php",
-		logout:"http://172.18.1.252/1606StevePHP/web/logout.php"
+		login:urlbase+"login.php",
+		loginstate:urlbase+"loginstate.php",
+		logout:urlbase+"logout.php",
+		course:urlbase+"course.php"
 	}
 }
