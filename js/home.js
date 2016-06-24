@@ -4,7 +4,7 @@ function progressCtrl () {
     $(".progress").show();
     $("#progressbar").css({"width":precent+"%"});
     if(precent===100){
-      setTimeout(function(){$(".progress").hide();},600);
+      setTimeout(function(){$(".progress").hide();precent=0;$("#progressbar").css({"width":precent+"%"});},600);
     }
   }
 function hideProgress(){
@@ -34,8 +34,8 @@ var app = angular.module('myApp', ['ngRoute']).config([
                 controller: 'HomeController'
             })
             .when('/newCourse', {
-                templateUrl: 'temp/newCourse.html',
-                controller: 'newCourseController'
+                templateUrl: 'temp/Course.html',
+                controller: 'CourseController'
             })
             .when('/about', {
                 templateUrl: 'temp/about.html',
@@ -71,7 +71,7 @@ var app = angular.module('myApp', ['ngRoute']).config([
 
 }).controller("HomeController",function($scope) {
 
-}).controller("newCourseController",function($scope) {
+}).controller("CourseController",function($scope) {
   $scope.course={};
   $scope.addCourse=function() {
     $.ajax({
@@ -84,8 +84,10 @@ var app = angular.module('myApp', ['ngRoute']).config([
           success : function(data){
             if(data.msg==='error'){
               alert("add Course fail!");
+              
             }
             if(data.msg==='ok'){
+              progress.addProgress(100);
               alert("add Course success!");
             }
           },
@@ -94,6 +96,27 @@ var app = angular.module('myApp', ['ngRoute']).config([
           }
       });
   };
+  $.ajax({
+        type :"get",
+        async:true,
+        url : config.url.course,
+        dataType : "jsonp",
+        jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+        data: {opt:'showtable'},
+        success : function(data){
+          if(data.msg==='ok'){
+            $scope.$apply(function() {
+              $scope.courseList = data;
+              progress.addProgress(100);
+            });
+          }else{
+
+          }
+        },
+        error:function(){
+            alert("Get course error!");
+        }
+    });
 }).controller("AboutController",function($scope) {
 
 });
@@ -115,3 +138,12 @@ function logout() {
           }
       });
 }
+function activeCtrl(){
+  var item=document.getElementById('homeli');
+  return function(that) {
+    $(item).removeClass("active");
+    item=that;
+    $(item).addClass("active");
+  };
+}
+var activeThis=activeCtrl();

@@ -1,0 +1,21 @@
+<div>
+	<h1 class="page-header">new Course</h1>
+	<div class="form-group">
+	    <label for="exampleInputName2">Course Name</label>
+	    <input type="text" class="form-control" id="exampleInputName2" placeholder="Course Name" ng-model="course.name">
+	</div>
+	<button type="submit" class="btn btn-primary" ng-click="addCourse()">Add Course</button>
+
+	<br/>
+	<br/>
+	<br/>
+	<h2 class="page-header">Course List</h2>
+
+	<table >
+	<th>Course Name</th>
+		<tr ng-repeat="item in courseList.table">
+			<td>{{ item.course }}</td>
+		</tr>
+		
+	</table>
+</div>
