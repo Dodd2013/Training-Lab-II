@@ -11,10 +11,11 @@
 	<br/>
 	<h2 class="page-header">Course List</h2>
 
-	<table >
-	<th>Course Name</th>
+	<table class="table table-striped">
+	<tr><th>Course Name</th><th>delete</th><th>updata</th></tr>
+	
 		<tr ng-repeat="item in courseList.table">
-			<td>{{ item.course }}</td>
+			<td>{{ item.course }}</td><td></td><td></td>
 		</tr>
 		
 	</table>

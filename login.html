@@ -53,7 +53,6 @@
     	        async:false,
     	        url : config.url.login,
     	        dataType : "jsonp",
-    	        jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
     	        data: {"uid":$('#inputId').val(),"pwd":$('#inputPassword').val()},
     	        success : function(json){
     	            if(json.msg==='ok'){

@@ -36,6 +36,29 @@ var app = angular.module('myApp', ['ngRoute']).config([
             .when('/newCourse', {
                 templateUrl: 'temp/Course.html',
                 controller: 'CourseController'
+                ,resolve:{
+              course:['$q',function($q) {
+                var deferred=$q.defer();
+                progress.setProgress(20);
+                  $.ajax({type :"get",async:true,url : config.url.course,dataType : "jsonp",
+                        jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+                        data: {opt:'showtable'},
+                        success : function(data){
+                          progress.setProgress(100);
+                          if(data.msg==='ok'){
+                            deferred.resolve(data);
+                          }else{
+                            alert("Get Course error");
+                          }
+                        },
+                        error:function(){
+                          progress.setProgress(100);
+                            alert("Can't connet to server!");
+                        }
+                });
+                  return deferred.promise;
+              }]
+            }
             })
             .when('/about', {
                 templateUrl: 'temp/about.html',
@@ -49,7 +72,6 @@ var app = angular.module('myApp', ['ngRoute']).config([
               async:true,
               url : config.url.loginstate,
               dataType : "jsonp",
-              jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
               data: {},
               success : function(data){
                 //alert(JSON.stringify(data));
@@ -71,15 +93,17 @@ var app = angular.module('myApp', ['ngRoute']).config([
 
 }).controller("HomeController",function($scope) {
 
-}).controller("CourseController",function($scope) {
+})
+.controller("CourseController",['$scope','course',function($scope,course) {
   $scope.course={};
+  $scope.courseList=course;
   $scope.addCourse=function() {
+    progress.setProgress(10);
     $.ajax({
           type :"get",
-          async:true,
+          async:false,
           url : config.url.course,
           dataType : "jsonp",
-          jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
           data: {opt:'add',course:$scope.course.name},
           success : function(data){
             if(data.msg==='error'){
@@ -87,37 +111,41 @@ var app = angular.module('myApp', ['ngRoute']).config([
               
             }
             if(data.msg==='ok'){
-              progress.addProgress(100);
+              progress.setProgress(50);
               alert("add Course success!");
+              // $scope.$apply(function() {
+                
+              //   $scope.courseList.table.push({course:$scope.course.name});
+              // });
             }
           },
           error:function(){
+              progress.setProgress(100);
               alert("Can't connet to server!");
           }
       });
+    //   $.ajax({type :"get",async:true,url : config.url.course,dataType : "jsonp",
+    //         jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+    //         data: {opt:'showtable'},
+    //         success : function(data){
+    //           progress.setProgress(100);
+    //           if(data.msg==='ok'){
+    //             $scope.$apply(function() {
+    //               $scope.courseList=data;
+    //             });
+    //           }else{
+    //             alert("Get Course error");
+    //           }
+    //         },
+    //         error:function(){
+    //           progress.setProgress(100);
+    //             alert("Can't connet to server!");
+    //         }
+    // });
   };
-  $.ajax({
-        type :"get",
-        async:true,
-        url : config.url.course,
-        dataType : "jsonp",
-        jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
-        data: {opt:'showtable'},
-        success : function(data){
-          if(data.msg==='ok'){
-            $scope.$apply(function() {
-              $scope.courseList = data;
-              progress.addProgress(100);
-            });
-          }else{
 
-          }
-        },
-        error:function(){
-            alert("Get course error!");
-        }
-    });
-}).controller("AboutController",function($scope) {
+}])
+.controller("AboutController",function($scope) {
 
 });
 
@@ -127,7 +155,6 @@ function logout() {
           async:true,
           url : config.url.logout,
           dataType : "jsonp",
-          jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
           data: {},
           success : function(data){
             alert("Logout success!\nwill  turn to index page.");
