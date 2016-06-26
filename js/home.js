@@ -92,11 +92,63 @@ var app = angular.module('myApp', ['ngRoute']).config([
           });
 
 }).controller("HomeController",function($scope) {
-
+  activeThis('#homeli');
 })
 .controller("CourseController",['$scope','course',function($scope,course) {
+  activeThis('#courseli');
   $scope.course={};
   $scope.courseList=course;
+  $scope.updateCourse=function(index) {
+    var name=prompt("Please enter the new Course name!","");
+    if (name!=null && name!=""){
+      $.ajax({
+            type :"get",
+            async:false,
+            url : config.url.course,
+            dataType : "jsonp",
+            data: {opt:'update',course:$scope.courseList.table[index].course,course2:name},
+            success : function(data){
+              if(data.msg==='error'){
+                alert("Update Course fail!");
+              }
+              if(data.msg==='ok'){
+                progress.setProgress(50);
+                alert("Update Course success!");
+                $scope.courseList.table[index].course=name; 
+                progress.setProgress(100);
+              }
+            },
+            error:function(){
+                progress.setProgress(100);
+                alert("Can't connet to server!");
+            }
+        });
+    }
+  };
+  $scope.deleteCourse=function(index) {
+    $.ajax({
+          type :"get",
+          async:false,
+          url : config.url.course,
+          dataType : "jsonp",
+          data: {opt:'delete',course:$scope.courseList.table[index].course},
+          success : function(data){
+            if(data.msg==='error'){
+              alert("Delete Course fail!");
+            }
+            if(data.msg==='ok'){
+              progress.setProgress(50);
+              alert("Delete Course success!");
+              $scope.courseList.table.splice(index,1); 
+              progress.setProgress(100);
+            }
+          },
+          error:function(){
+              progress.setProgress(100);
+              alert("Can't connet to server!");
+          }
+      });
+  };
   $scope.addCourse=function() {
     progress.setProgress(10);
     $.ajax({
@@ -113,10 +165,8 @@ var app = angular.module('myApp', ['ngRoute']).config([
             if(data.msg==='ok'){
               progress.setProgress(50);
               alert("add Course success!");
-              // $scope.$apply(function() {
-                
-              //   $scope.courseList.table.push({course:$scope.course.name});
-              // });
+              $scope.courseList.table.push({course:$scope.course.name});
+              progress.setProgress(100);
             }
           },
           error:function(){
@@ -146,7 +196,7 @@ var app = angular.module('myApp', ['ngRoute']).config([
 
 }])
 .controller("AboutController",function($scope) {
-
+  activeThis('#aboutli');
 });
 
 function logout() {
@@ -174,3 +224,4 @@ function activeCtrl(){
   };
 }
 var activeThis=activeCtrl();
+

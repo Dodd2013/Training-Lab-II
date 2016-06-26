@@ -9,14 +9,17 @@
 	<br/>
 	<br/>
 	<br/>
-	<h2 class="page-header">Course List</h2>
-
-	<table class="table table-striped">
-	<tr><th>Course Name</th><th>delete</th><th>updata</th></tr>
-	
-		<tr ng-repeat="item in courseList.table">
-			<td>{{ item.course }}</td><td></td><td></td>
-		</tr>
+	<h1 class="page-header">Course List</h1>
+	<div class="table-responsive">
+		<table class="table table-bordered text-center">
+		<tr><th class="text-center">Course Name</th><th class="text-center">Delete</th><th class="text-center">Update</th></tr>
 		
-	</table>
+			<tr ng-repeat="item in courseList.table">
+				<td>{{ item.course }}</td>
+				<td><button class="btn btn-danger" ng-click="deleteCourse($index)">Delete</button></td>
+				<td><button class="btn btn-warning" ng-click='updateCourse($index)'>Update</button></td>
+			</tr>
+			
+		</table>
+	</div>
 </div>
