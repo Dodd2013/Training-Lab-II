@@ -1,0 +1,10 @@
+<h1 class="page-header">Test Paper List</h1>
+<div class="table-responsive">
+	<table class="table table-bordered text-center">
+	<tr><th class="text-center">Test Paper ID</th><th class="text-center">Question ID</th></tr>
+		<tr ng-repeat="item in testlist.table">
+			<td>{{ item.testid }}</td>
+			<td>{{ item.queid }}</td>
+		</tr>
+	</table>
+</div>

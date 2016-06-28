@@ -1,0 +1,22 @@
+<h2 class="sub-header">Select question to make test paper!</h2>
+<div class="table-responsive">
+	<table class="table table-bordered text-center">
+	<tr>
+		<th class="text-center">Question ID</th>
+		<th class="text-center">Question</th>
+		<th class="text-center">Select</th>
+	</tr>
+	<tr ng-repeat="item in question.table">
+		<td>{{ item.queid }}</td>
+		<td>{{ item.que }}</td>
+		<td>
+			<button ng-click="selectquestion($index,$event)" class="btn btn-sm btn-block btn-primary">Not Select</button>
+		</td>
+	</tr>
+	</table>
+</div>
+<h2 class="sub-header">Input Test Paper Id</h2>
+<div class="form-group">
+	<input class="form-control" type="text" id='testid' placeholder="Enter Test Paper Id here!">
+</div>
+<button ng-click="sendTestData()" class="btn btn-lg btn-block btn-primary" >Save</button>

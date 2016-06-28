@@ -70,11 +70,70 @@ var app = angular.module('myApp', ['ngRoute']).config([
             .when('/addquestion', {
                 templateUrl: 'temp/addquestion.html',
                 controller: 'AddQuestionController'
+            }).when('/testpaperlist', {
+                templateUrl: 'temp/testpaperlist.html',
+                controller: 'TestPaperController',
+                    resolve:{
+                  testlist:['$q',function($q) {
+                    var deferred=$q.defer();
+                    progress.setProgress(20);
+                      $.ajax({
+                                type :"get",
+                                async:false,
+                                url : config.url.testmake,
+                                dataType : "jsonp",
+                                data: {opt:"showtable"},
+                                success : function(data){
+                                  progress.setProgress(100);
+                                  if(data.msg==='ok'){
+                                    deferred.resolve(data);
+                                  }else{
+                                    alert("Get question fail!");
+                                  }
+                                },
+                                error:function(){
+                                    progress.setProgress(100);
+                                    alert("Can't connet to server!");
+                                }
+                            });
+                      return deferred.promise;
+                  }]
+                }
             })
             .when('/question', {
                 templateUrl: 'temp/question.html',
                 controller: 'QuestionController',
                     resolve:{
+                  question:['$q',function($q) {
+                    var deferred=$q.defer();
+                    progress.setProgress(20);
+                      $.ajax({
+                                type :"get",
+                                async:false,
+                                url : config.url.addQuestion,
+                                dataType : "jsonp",
+                                data: {opt:"showtable"},
+                                success : function(data){
+                                  progress.setProgress(100);
+                                  if(data.msg==='ok'){
+                                    deferred.resolve(data);
+                                  }else{
+                                    alert("Get question fail!");
+                                  }
+                                },
+                                error:function(){
+                                    progress.setProgress(100);
+                                    alert("Can't connet to server!");
+                                }
+                            });
+                      return deferred.promise;
+                  }]
+                }
+            })
+            .when('/maketest', {
+                templateUrl: 'temp/maketestpaper.html',
+                controller: 'MaketestpaperController',
+                resolve:{
                   question:['$q',function($q) {
                     var deferred=$q.defer();
                     progress.setProgress(20);
@@ -338,7 +397,67 @@ var app = angular.module('myApp', ['ngRoute']).config([
 }).controller("QuestionController",['$scope','question',function($scope,question) {
   activeThis('#questionli');
   $scope.question=question;
+}]).controller("TestPaperController",['$scope','testlist',function($scope,testlist) {
+  activeThis('#testpaperlistli');
+  $scope.testlist=testlist;
+}]).controller("MaketestpaperController",['$scope','question',function($scope,question) {
+  activeThis('#maketestli');
+  $scope.question=question;
+  var indexData=Array();
+  $scope.selectquestion=function(index,$event) {
+    if($($event.target).html()==='Not Select'){
+      indexData.push(index);
+      $($event.target).removeClass("btn-primary");
+      $($event.target).addClass("btn-success");
+      $($event.target).html("Selected");
+    }else{
+      var deleteindex=0
+      for (var i = indexData.length - 1; i >= 0; i--) {
+        if(indexData[i]===index){
+          deleteindex=i;
+          break;
+        }
+      }
+      indexData.splice(deleteindex,1);
+      $($event.target).addClass("btn-primary");
+      $($event.target).removeClass("btn-success");
+      $($event.target).html("Not Select");
+    }
+  };
+  $scope.sendTestData=function() {
+    var testid=$('#testid').val();
+    if(testid.replace(/[]/g,"")===''){
+      alert("Please enter test ID!");
+    }else{
+      var sendTestData=Array();
+      for (var i = indexData.length - 1; i >= 0; i--) {
+        var testQuest=Array();
+        testQuest.push(testid);
+        testQuest.push($scope.question.table[indexData[i]].queid);
+        sendTestData.push(testQuest);
+      };
+      // alert(JSON.stringify(sendTestData));
+      $.ajax({
+          type :"get",
+          async:false,
+          url : config.url.testmake,
+          dataType : "jsonp",
+          data: {opt:'add',values:JSON.stringify(sendTestData)},
+          success : function(data){
+            if(data.msg==='ok'){
+              alert("Add Test paper success!");
+            }else{
+              alert("Add Test paper fail!");
+            }
+          },
+          error:function(){
+              alert("Can't connet to server!");
+          }
+      });
+    }
+  };
 }]);
+
 function logout() {
   var res=$.ajax({
           type :"get",
