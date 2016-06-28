@@ -404,7 +404,7 @@ var app = angular.module('myApp', ['ngRoute']).config([
   activeThis('#maketestli');
   $scope.question=question;
   var indexData=Array();
-  $scope.selectquestion=function(index,$event) {
+  $scope.selectquestion=function(index,$event){
     if($($event.target).html()==='Not Select'){
       indexData.push(index);
       $($event.target).removeClass("btn-primary");
