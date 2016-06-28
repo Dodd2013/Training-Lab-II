@@ -4,9 +4,10 @@
 	<meta charset="UTF-8">
 	<title>Exam</title>
 	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/question.css">
 </head>
-<body ng-app='myExam' ng-controller='mycontroller'>
-<div class="form-group" >
+<body ng-app='myExam' ng-controller='mycontroller' class="container">
+<div class="form-group" id='keycodein'>
 	<label for="keycode" class="col-sm-1 control-label">Key Code</label>
 	<div class="col-sm-10">
 	<input type="text" id='keycode' class="form-control" placeholder="Enter Key Code">
@@ -16,6 +17,37 @@
 	</div>
 </div>
 <h1 class="page-header">Exam</h1>
+	
+	<div class="question" ng-repeat='item in question.table'>
+		<div class="quet">{{ $index+1 }}.{{ item.que }}</div>
+		<div class="radio">
+		  <label>
+		    <input type="radio" name='ans{{ $index+1 }}' value="a">
+		    a.{{ item.a }}
+		  </label>
+		</div>
+		<div class="radio">
+		  <label>
+		    <input type="radio" name='ans{{ $index+1 }}' value="b">
+		    b.{{ item.b }}
+		  </label>
+		</div>
+		<div class="radio">
+		  <label>
+		    <input type="radio" name='ans{{ $index+1 }}' value="c">
+		    c.{{ item.c }}
+		  </label>
+		</div>
+		<div class="radio">
+		  <label>
+		    <input type="radio" name='ans{{ $index+1 }}' value="d">
+		    d.{{ item.d }}
+		  </label>
+		</div>
+	</div>
+	<div class="form-group">
+		<button id='submitbtn' class="btn btn-block btn-lg btn-primary" ng-click='submit()'>Submit</button>
+	</div>
 	<script src="js/jquery-3.0.0.min.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
 	<script src="js/angular.min.js"></script>
@@ -28,17 +60,29 @@
 		}
 		var exid=getQueryString('exid');
 		var app = angular.module('myExam',[]).controller('mycontroller',function($scope) {
+			$('#submitbtn').hide();
+			$scope.submit=function() {
+				
+			};
 			$scope.getexam=function(){
 				var keycode=$('#keycode').val();
 				$.ajax({
 				          type :"get",
-				          async:false,
+				          async:true,
 				          url : config.url.stuexam,
 				          dataType : "jsonp",
 				          data: {opt:'getquestion',keycode:keycode,exid:exid},
 				          success : function(data){
 				            if(data.msg==='ok'){
-				              alert(JSON.stringify(data));
+				              if(data.table[0].que===undefined){
+				              	
+				              }else{
+				              	$('#keycodein').hide();
+				              	$('#submitbtn').show();
+				              	$scope.$apply(function() {
+				              	  $scope.question=data;
+				              	});
+				              }
 				            }else{
 				              alert("Enter Exam paper fail!");
 				            }
@@ -47,6 +91,7 @@
 				              alert("Can't connet to server!");
 				          }
 				      });
+				
 			}
 
 		});
