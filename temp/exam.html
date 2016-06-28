@@ -1,0 +1,24 @@
+<h1 class="page-header">Add Exam</h1>
+<div class="form-group">
+	<label for="examid">Exam ID</label>
+	<input type="text" class="form-control" id='examid' placeholder="Exam ID">
+</div>
+<div class="form-group">
+	<label for="testid">Test ID</label>
+	<input type="text" id='testid' class="form-control" placeholder="Test ID">
+</div>
+<div class="form-group">
+	<label for="keycode">Key Code</label>
+	<input class="form-control" type="text" id="keycode" placeholder="Key Code">
+</div>
+<div class="form-group">
+	<label for="begintime">Begin Time</label>
+	<input class="form-control" type="text" value="{{ now }}" id="begintime" data-date-format="yyyy-mm-dd hh:ii">
+</div>
+<div class="form-group">
+	<label for="endtime">End Time</label>
+	<input class="form-control" type="text" value="{{ now }}" id="endtime" data-date-format="yyyy-mm-dd hh:ii">
+</div>
+<div class="form-group">
+	<button class="btn btn-lg btn-block btn-primary" ng-click='addExam()'>Add Exam</button>
+</div>

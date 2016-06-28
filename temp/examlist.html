@@ -1,0 +1,15 @@
+<h1 class="page-header">Exam List</h1>
+<div class="table-responsive">
+	<table class="table table-bordered text-center">
+	<tr><th class="text-center">Exam ID</th><th class="text-center">Test ID</th><th class="text-center">Key Code</th><th class="text-center">Begin Time</th><th class="text-center">End Time</th></tr>
+	
+		<tr ng-repeat="item in exam.table">
+			<td>{{ item.exid }}</td>
+			<td>{{ item.testid }}</td>
+			<td>{{ item.keycode }}</td>
+			<td>{{ item.starttime }}</td>
+			<td>{{ item.endtime }}</td>
+		</tr>
+		
+	</table>
+</div>

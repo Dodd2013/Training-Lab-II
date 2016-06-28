@@ -16,6 +16,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/home.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css">
   </head>
 
   <body ng-app="myApp">
@@ -59,14 +60,12 @@
             <li id='questionli' ><a href="#/question">Question List</a></li>
             <li id='maketestli' ><a href="#/maketest">Make Test Paper</a></li>
             <li id='testpaperlistli' ><a href="#/testpaperlist"> Test Paper List</a></li>
-            
-            
+            <li id='examli' ><a href="#/exam"> Add Exam</a></li>
+            <li id='examlistli' ><a href="#/examlist">Exam List</a></li>
           </ul>
-          <!-- <ul class="nav nav-sidebar">
-            <li><a href="">Nav item again</a></li>
-            <li><a href="">One more nav</a></li>
-            <li><a href="">Another nav item</a></li>
-          </ul> -->
+          <ul class="nav nav-sidebar">
+            <li id='studentexamlistli' ><a href="#/studentexamlist">Student Exam List</a></li>
+          </ul>
         </div>
         <div ng-view class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
       </div>
@@ -79,6 +78,7 @@
     <script src="js/angular.min.js"></script>
     <script type="text/javascript" src="js/angular-route.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="js/config.js"></script>
     <script type="text/javascript" src="js/home.js"></script>
   </body>

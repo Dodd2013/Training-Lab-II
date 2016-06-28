@@ -35,6 +35,32 @@ var app = angular.module('myApp', ['ngRoute']).config([
             }).when('/attendance', {
                 templateUrl: 'temp/attendance.html',
                 controller: 'AttendanceController'
+            }).when('/examlist', {
+                templateUrl: 'temp/examlist.html',
+                controller: 'ExamlistController',
+                    resolve:{
+                  exam:['$q',function($q) {
+                    var deferred=$q.defer();
+                    progress.setProgress(20);
+                      $.ajax({type :"get",async:true,url : config.url.exam,dataType : "jsonp",
+                            jsonpCallback:"success_jsonpCallback",//×Ô¶¨ÒåµÄjsonp»Øµ÷º¯ÊýÃû³Æ£¬Ä¬ÈÏÎªjQuery×Ô¶¯Éú³ÉµÄËæ»úº¯ÊýÃû
+                            data: {opt:'showtable'},
+                            success : function(data){
+                              progress.setProgress(100);
+                              if(data.msg==='ok'){
+                                deferred.resolve(data);
+                              }else{
+                                alert("Get Course error");
+                              }
+                            },
+                            error:function(){
+                              progress.setProgress(100);
+                                alert("Can't connet to server!");
+                            }
+                    });
+                      return deferred.promise;
+                  }]
+                }
             })
             .when('/course', {
                 templateUrl: 'temp/Course.html',
@@ -44,7 +70,7 @@ var app = angular.module('myApp', ['ngRoute']).config([
                 var deferred=$q.defer();
                 progress.setProgress(20);
                   $.ajax({type :"get",async:true,url : config.url.course,dataType : "jsonp",
-                        jsonpCallback:"success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+                        jsonpCallback:"success_jsonpCallback",//×Ô¶¨ÒåµÄjsonp»Øµ÷º¯ÊýÃû³Æ£¬Ä¬ÈÏÎªjQuery×Ô¶¯Éú³ÉµÄËæ»úº¯ÊýÃû
                         data: {opt:'showtable'},
                         success : function(data){
                           progress.setProgress(100);
@@ -62,6 +88,9 @@ var app = angular.module('myApp', ['ngRoute']).config([
                   return deferred.promise;
               }]
             }
+            }).when('/exam', {
+                templateUrl: 'temp/exam.html',
+                controller: 'ExamController'
             })
             .when('/about', {
                 templateUrl: 'temp/about.html',
@@ -100,6 +129,37 @@ var app = angular.module('myApp', ['ngRoute']).config([
                   }]
                 }
             })
+          .when('/studentexamlist', {
+                templateUrl: 'temp/studentexamlist.html',
+                controller: 'StudentExamlistController',
+                    resolve:{
+                  studentexam:['$q',function($q) {
+                    var deferred=$q.defer();
+                    progress.setProgress(20);
+                      $.ajax({
+                                type :"get",
+                                async:false,
+                                url : config.url.stuexam,
+                                dataType : "jsonp",
+                                data: {opt:"getexam"},
+                                success : function(data){
+                                  progress.setProgress(100);
+                                  if(data.msg==='ok'){
+                                    deferred.resolve(data);
+                                  }else{
+                                    alert("Get question fail!");
+                                  }
+                                },
+                                error:function(){
+                                    progress.setProgress(100);
+                                    alert("Can't connet to server!");
+                                }
+                            });
+                      return deferred.promise;
+                  }]
+                }
+            })
+
             .when('/question', {
                 templateUrl: 'temp/question.html',
                 controller: 'QuestionController',
@@ -357,6 +417,44 @@ var app = angular.module('myApp', ['ngRoute']).config([
     }
   };
 })
+.controller("ExamController",function($scope) {
+  activeThis('#examli');
+  $scope.now=getNowFormatDate();
+  $('#begintime').datetimepicker();
+  $('#endtime').datetimepicker();
+  $scope.addExam=function() {
+    var examid=$('#examid').val();
+    var testid=$('#testid').val();
+    var keycode=$('#keycode').val();
+    var begintime=$('#begintime').val();
+    var endtime=$('#endtime').val();
+    var exam=Array();
+    var sendexamData=Array();
+    exam.push(examid,testid,begintime,endtime,keycode);
+    sendexamData.push(exam);
+    progress.setProgress(20);
+    $.ajax({
+              type :"get",
+              async:true,
+              url : config.url.exam,
+              dataType : "jsonp",
+              data: {opt:'add',values:JSON.stringify(sendexamData)},
+              success : function(data){
+                if(data.msg==='ok'){
+                  progress.setProgress(100);
+                  alert("Add Exam success");
+                }else{
+                  progress.setProgress(100);
+                  alert("Add Exam fail");
+                }
+              },
+              error:function(){
+                  progress.setProgress(100);
+                  alert("Can't connet to server!");
+              }
+          });
+  };
+})
 .controller("AboutController",function($scope) {
   activeThis('#aboutli');
 }).controller("AddQuestionController",function($scope) {
@@ -394,7 +492,19 @@ var app = angular.module('myApp', ['ngRoute']).config([
               }
           });
   };
-}).controller("QuestionController",['$scope','question',function($scope,question) {
+}).controller("ExamlistController",['$scope','exam',function($scope,exam) {
+  activeThis('#examlistli');
+  $scope.exam=exam;
+}])
+.controller("StudentExamlistController",['$scope','studentexam',function($scope,studentexam) {
+  activeThis('#studentexamlistli');
+  $scope.studentexam=studentexam;
+  $scope.enterExam=function(index) {
+    var exid=$scope.studentexam.table[index].exid;
+    window.open("takeExam.html?exid="+exid);
+  };
+}])
+.controller("QuestionController",['$scope','question',function($scope,question) {
   activeThis('#questionli');
   $scope.question=question;
 }]).controller("TestPaperController",['$scope','testlist',function($scope,testlist) {
