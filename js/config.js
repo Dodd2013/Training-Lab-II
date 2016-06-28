@@ -1,4 +1,4 @@
-var urlbase="http://172.18.1.252/1606StevePHP/web/"
+var urlbase="http://172.18.5.15/1606StevePHP/web/"
 var config={
 	url:{
 		login:urlbase+"login.php",

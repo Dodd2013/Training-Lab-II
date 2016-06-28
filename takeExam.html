@@ -5,43 +5,51 @@
 	<title>Exam</title>
 	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<div class="form-group">
+<body ng-app='myExam' ng-controller='mycontroller'>
+<div class="form-group" >
 	<label for="keycode" class="col-sm-1 control-label">Key Code</label>
 	<div class="col-sm-10">
 	<input type="text" id='keycode' class="form-control" placeholder="Enter Key Code">
 	</div>
+	<div class="col-sm-1">
+	<button class='btn btn-primary' ng-click='getexam()'>Enter Exam</button>
+	</div>
 </div>
-
+<h1 class="page-header">Exam</h1>
 	<script src="js/jquery-3.0.0.min.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="js/angular.min.js"></script>
 	<script type="text/javascript" src="js/config.js"></script>
 	<script type="text/javascript">
 		function getQueryString(name) { 
 			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
 			var r = window.location.search.substr(1).match(reg); 
 			if (r != null) return unescape(r[2]); return null; 
-		} 
+		}
 		var exid=getQueryString('exid');
+		var app = angular.module('myExam',[]).controller('mycontroller',function($scope) {
+			$scope.getexam=function(){
+				var keycode=$('#keycode').val();
+				$.ajax({
+				          type :"get",
+				          async:false,
+				          url : config.url.stuexam,
+				          dataType : "jsonp",
+				          data: {opt:'getquestion',keycode:keycode,exid:exid},
+				          success : function(data){
+				            if(data.msg==='ok'){
+				              alert(JSON.stringify(data));
+				            }else{
+				              alert("Enter Exam paper fail!");
+				            }
+				          },
+				          error:function(){
+				              alert("Can't connet to server!");
+				          }
+				      });
+			}
 
-		$.ajax({
-          type :"get",
-          async:false,
-          url : config.url.stuexam,
-          dataType : "jsonp",
-          data: {opt:'add',values:JSON.stringify(sendTestData)},
-          success : function(data){
-            if(data.msg==='ok'){
-              alert("Add Test paper success!");
-            }else{
-              alert("Add Test paper fail!");
-            }
-          },
-          error:function(){
-              alert("Can't connet to server!");
-          }
-      });
-    }
+		});
 	</script>
 </body>
 </html>
