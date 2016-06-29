@@ -45,6 +45,7 @@
 		  </label>
 		</div>
 	</div>
+	<input type="hidden" id='questionNum' value='{{ question.table.length }}'>
 	<div class="form-group">
 		<button id='submitbtn' class="btn btn-block btn-lg btn-primary" ng-click='submit()'>Submit</button>
 	</div>
@@ -53,6 +54,25 @@
 	<script src="js/angular.min.js"></script>
 	<script type="text/javascript" src="js/config.js"></script>
 	<script type="text/javascript">
+		var uid;
+		$.ajax({
+			    type :"get",
+			    async:true,
+			    url : config.url.loginstate,
+			    dataType : "jsonp",
+			    data: {},
+			    success : function(data){
+			      if(data.msg=='ok'){
+			      	uid=data.uid;
+			      }else{
+			        alert("User are not online!\nwill  turn to login page.");
+			        window.location.href='login.html';
+			      }
+			    },
+			    error:function(){
+			        alert("Can't connet to server!");
+			    }
+			});
 		function getQueryString(name) { 
 			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
 			var r = window.location.search.substr(1).match(reg); 
@@ -62,7 +82,39 @@
 		var app = angular.module('myExam',[]).controller('mycontroller',function($scope) {
 			$('#submitbtn').hide();
 			$scope.submit=function() {
-				
+				var count=$('#questionNum').val();
+				var ansArray=Array();
+				for(var i=1;i<=count;i++){
+					ansArray.push($("input[name=ans"+i+"]:checked").val());
+				}
+				// alert(JSON.stringify(ansArray));
+				var sendansData=Array();
+				for(i=0;i<count;i++){
+					var ansData=Array();
+					ansData.push(uid);
+					ansData.push(exid);
+					ansData.push($scope.question.table[i].queid);
+					ansData.push(ansArray[i]);
+					sendansData.push(ansData);
+				}
+				$.ajax({
+				          type :"get",
+				          async:true,
+				          url : config.url.stuexam,
+				          dataType : "jsonp",
+				          data: {opt:'answer',values:JSON.stringify(sendansData)},
+				          success : function(data){
+				            if(data.msg==='ok'){
+				              alert("OK! Exam is over");
+				              window.location.href='home.html';
+				            }else{
+				              alert("Enter Exam paper fail!");
+				            }
+				          },
+				          error:function(){
+				              alert("Can't connet to server!");
+				          }
+				      });
 			};
 			$scope.getexam=function(){
 				var keycode=$('#keycode').val();
