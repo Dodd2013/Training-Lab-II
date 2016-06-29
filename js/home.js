@@ -32,6 +32,9 @@ var app = angular.module('myApp', ['ngRoute']).config([
             .when('/home', {
                 templateUrl: 'temp/home.html',
                 controller: 'HomeController'
+            }).when('/result', {
+                templateUrl: 'temp/result.html',
+                controller: 'ResultController'
             }).when('/attendance', {
                 templateUrl: 'temp/attendance.html',
                 controller: 'AttendanceController'
@@ -88,7 +91,11 @@ var app = angular.module('myApp', ['ngRoute']).config([
                   return deferred.promise;
               }]
             }
-            }).when('/exam', {
+            }).when('/nav', {
+                templateUrl: 'temp/nav.html',
+                controller: 'navController'
+            })
+            .when('/exam', {
                 templateUrl: 'temp/exam.html',
                 controller: 'ExamController'
             })
@@ -249,7 +256,33 @@ var app = angular.module('myApp', ['ngRoute']).config([
               }
           });
 
-}).controller("HomeController",function($scope) {
+}).controller("ResultController",function($scope) {
+  activeThis('#resultli');
+  $scope.getReport=function() {
+    var examid=$('#examid').val();
+    $.ajax({
+          type :"get",
+          async:false,
+          url : config.url.examReport,
+          dataType : "jsonp",
+          data: {examid:examid},
+          success : function(data){
+            if(data.msg==='error'){
+              alert("Get Report fail!");
+            }
+            if(data.msg==='ok'){
+              $scope.report=data;
+            }
+          },
+          error:function(){
+              alert("Can't connet to server!");
+          }
+      });
+  };
+})
+.controller("navController",function($scope) {
+})
+.controller("HomeController",function($scope) {
   activeThis('#homeli');
 })
 .controller("CourseController",['$scope','course',function($scope,course) {

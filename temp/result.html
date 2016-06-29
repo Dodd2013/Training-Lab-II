@@ -1,0 +1,25 @@
+<h1 class="page-header">Result Report</h1>
+<div class="form-group">
+	<div class="col-sm-10">
+		<input id='examid' type="text" class="form-control" placeholder='Enter Exam Id here!'>
+	</div>
+	<div class="col-sm-2">
+		<button class="btn btn-md btn-block btn-primary" ng-click='getReport()'>Get Report</button>
+	</div>
+</div>
+
+<h1 class="sub-header">Report</h1>
+
+<div class="table-responsive">
+	<table class="table table-bordered text-center">
+	<tr><th class="text-center">User ID</th><th class="text-center">Fault Amount</th><th class="text-center">Correct Amount</th><th class="text-center">Correct Percent</th></tr>
+	
+		<tr ng-repeat="item in report.table">
+			<td>{{ item.uid }}</td>
+			<td>{{ item['fault amount'] }}</td>
+			<td>{{ item['correct amount'] }}</td>
+			<td>{{ item['correct percent'] }}</td>
+		</tr>
+		
+	</table>
+</div>

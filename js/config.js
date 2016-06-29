@@ -1,4 +1,4 @@
-var urlbase="http://127.0.0.1:8001/1606StevePHP/web/"
+var urlbase="../1606StevePHP/web/"
 var config={
 	url:{
 		login:urlbase+"login.php",
@@ -10,7 +10,8 @@ var config={
 		addQuestion:urlbase+"questionmake.php",
 		testmake:urlbase+"testmake.php",
 		exam:urlbase+"examsche.php",
-		stuexam:urlbase+"stu_exam.php"
+		stuexam:urlbase+"stu_exam.php",
+        examReport:urlbase+"exam_report.php"
 	}
 }
 function getNowFormatDate() {
